@@ -1,34 +1,41 @@
 <?php
-$servername = 'db';
-$username = 'myuser';
-$password = 'mypassword';
-$database = 'myapp_db';
-
-$conn = new mysqli($servername, $username, $password, $database);
+// Connessione al DB
+$conn = new mysqli('db', 'myuser', 'mypassword', 'myapp_db');
 if ($conn->connect_error) die("Errore connessione: " . $conn->connect_error);
 
-if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    $nome = trim(isset($_POST['nome']) ? $_POST['nome'] : '');
-    $email = trim(isset($_POST['email']) ? $_POST['email'] : '');
-    $id = intval(isset($_POST['id']) ? $_POST['id'] : 0);
-    $azione = isset($_POST['azione']) ? $_POST['azione'] : '';
+$msg = "";
 
-    if ($nome && $email) {
-        $stmt = $conn->prepare("INSERT INTO utenti (nome, email) VALUES (?, ?)");
-        $stmt->bind_param("ss", $nome, $email);
-        $msg = $stmt->execute() ? "Utente aggiunto!" : "Errore: " . $stmt->error;
-    } elseif ($azione === 'elimina' && $id > 0) {
-        $stmt = $conn->prepare("DELETE FROM utenti WHERE id = ?");
-        $stmt->bind_param("i", $id);
-        $msg = $stmt->execute() ? "Utente eliminato!" : "Errore: " . $stmt->error;
-    } else {
-        $msg = "Compila tutti i campi!";
+// --- OPERAZIONI POST ---
+if ($_SERVER["REQUEST_METHOD"] === "POST") {
+
+    $azione = $_POST['azione'] ?? '';
+
+    // Aggiungi utente
+    if ($azione === 'aggiungi') {
+        $nome = trim($_POST['nome'] ?? '');
+        $email = trim($_POST['email'] ?? '');
+
+        if ($nome && $email) {
+            $sql = "INSERT INTO utenti (nome, email) VALUES ('$nome', '$email')";
+            $msg = $conn->query($sql) ? "Utente aggiunto!" : "Errore: " . $conn->error;
+        } else {
+            $msg = "Compila nome ed email!";
+        }
+    }
+
+    // Elimina utente
+    if ($azione === 'elimina') {
+        $id = $_POST['id'] ?? '';
+        if ($id !== '') {
+            $sql = "DELETE FROM utenti WHERE id = '$id'";
+            $msg = $conn->query($sql) ? "Utente eliminato!" : "Errore: " . $conn->error;
+        }
     }
 }
 
+// --- CARICA UTENTI ---
 $result = $conn->query("SELECT id, nome, email FROM utenti ORDER BY id ASC");
 ?>
-
 <!DOCTYPE html>
 <html lang="it">
 <head>
@@ -41,12 +48,14 @@ $result = $conn->query("SELECT id, nome, email FROM utenti ORDER BY id ASC");
 <div class="container">
     <h2 class="text-center mb-4">Gestione Utenti</h2>
 
-    <?php if (isset($msg)) : ?>
-        <p class="alert alert-info text-center"><?= htmlspecialchars($msg) ?></p>
+    <?php if ($msg) : ?>
+        <p class="alert alert-info text-center"><?= $msg ?></p>
     <?php endif; ?>
 
+    <!-- Form aggiunta utente -->
     <div class="card p-4 mb-4 shadow">
         <form method="POST" class="row g-2">
+            <input type="hidden" name="azione" value="aggiungi">
             <div class="col-md-5">
                 <input type="text" name="nome" placeholder="Nome" class="form-control" required>
             </div>
@@ -59,18 +68,19 @@ $result = $conn->query("SELECT id, nome, email FROM utenti ORDER BY id ASC");
         </form>
     </div>
 
+    <!-- Tabella utenti -->
     <div class="card p-4 shadow">
         <table class="table table-bordered text-center">
             <thead class="table-dark">
                 <tr><th>ID</th><th>Nome</th><th>Email</th><th>Azione</th></tr>
             </thead>
             <tbody>
-                <?php if ($result->num_rows > 0) : ?>
+                <?php if ($result && $result->num_rows > 0) : ?>
                     <?php while ($r = $result->fetch_assoc()) : ?>
                         <tr>
                             <td><?= $r['id'] ?></td>
-                            <td><?= htmlspecialchars($r['nome']) ?></td>
-                            <td><?= htmlspecialchars($r['email']) ?></td>
+                            <td><?= $r['nome'] ?></td>
+                            <td><?= $r['email'] ?></td>
                             <td>
                                 <form method="POST">
                                     <input type="hidden" name="azione" value="elimina">
