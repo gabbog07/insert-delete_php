@@ -17,7 +17,7 @@ services:
 
   db:
     image: mysql:8.0
-    container_name: mysql-db-GRECS
+    container_name: mysql-db
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: rootpassword
@@ -31,7 +31,7 @@ services:
 
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
-    container_name: phpmyadminGRECS
+    container_name: phpmyadmin
     restart: always
     ports:
       - "8081:80"
