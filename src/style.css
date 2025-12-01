@@ -1,0 +1,61 @@
+/* TITOLO CENTRALE */
+.main-title {
+    text-align: center;
+    font-size: 2.8rem;
+    font-weight: 700;
+    color: #000;
+}
+
+/* INPUT GRANDI */
+input.form-control-lg {
+    font-size: 1.1rem;
+    height: 55px;
+}
+
+/* BOTTONE AGGIUNGI VERDE */
+.btn-add {
+    background-color: #28a745;
+    border: 2px solid #1f8c39;
+    color: white;
+    padding: 12px 20px;
+    font-weight: 600;
+    width: 100%;
+    border-radius: 4px;
+    transition: 0.2s;
+}
+
+.btn-add:hover {
+    background-color: #1f8c39;
+    border-color: #16652b;
+}
+
+/* TABELLA CON BORDI NERI */
+.table-bordered-black {
+    border: 2px solid black;
+}
+
+.table-bordered-black th,
+.table-bordered-black td {
+    border: 1px solid black !important;
+}
+
+/* BOTTONI AZIONE */
+.btn-modifica {
+    background-color: #007b8f;
+    border-color: #3399aa;
+    color: white;
+}
+
+.btn-modifica:hover {
+    background-color: #005e6d;
+}
+
+.btn-elimina {
+    background-color: #e60000;
+    border-color: #b30000;
+    color: white;
+}
+
+.btn-elimina:hover {
+    background-color: #b30000;
+}

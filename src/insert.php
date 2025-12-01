@@ -56,48 +56,58 @@ $result = $conn->query("SELECT id, nome, email FROM utenti ORDER BY id ASC");
     <meta charset="UTF-8">
     <title>Gestione Utenti</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
 </head>
+
 <body class="bg-light p-4">
 
 <div class="container">
-    <h2 class="text-center mb-4">Gestione Utenti</h2>
+    <h2 class="text-center mb-4 main-title">Gestione Utenti</h2>
 
     <?php if ($msg) : ?>
         <p class="alert alert-info text-center"><?= $msg ?></p>
     <?php endif; ?>
 
     <!-- Form aggiunta utente -->
-    <div class="card p-4 mb-4 shadow">
-        <form method="POST" class="row g-2">
+    <div class="card p-4 mb-4">
+        <form method="POST" class="row g-2 align-items-center">
             <input type="hidden" name="azione" value="aggiungi">
+
             <div class="col-md-5">
-                <input type="text" name="nome" placeholder="Nome" class="form-control" required>
+                <input type="text" name="nome" placeholder="Nome"
+                       class="form-control form-control-lg" required>
             </div>
+
             <div class="col-md-5">
-                <input type="email" name="email" placeholder="Email" class="form-control" required>
+                <input type="email" name="email" placeholder="Email"
+                       class="form-control form-control-lg" required>
             </div>
+
             <div class="col-md-2">
-                <button class="btn btn-primary w-100">Aggiungi</button>
+                <button class="btn btn-add">Aggiungi</button>
             </div>
         </form>
     </div>
 
-    <!-- FORM MODIFICA (compare solo quando serve) -->
+    <!-- Form modifica (solo quando richiesto) -->
     <?php if (isset($_POST['azione']) && $_POST['azione'] === 'mostra_modifica') : ?>
-        <div class="card p-4 mb-4 shadow">
+        <div class="card p-4 mb-4">
             <h5>Modifica Utente</h5>
+
             <form method="POST" class="row g-2">
                 <input type="hidden" name="azione" value="modifica">
                 <input type="hidden" name="id" value="<?= $_POST['id'] ?>">
 
                 <div class="col-md-5">
-                    <input type="text" name="nome" class="form-control"
-                        value="<?= htmlspecialchars($_POST['nome']) ?>" required>
+                    <input type="text" name="nome"
+                           class="form-control form-control-lg"
+                           value="<?= htmlspecialchars($_POST['nome']) ?>" required>
                 </div>
 
                 <div class="col-md-5">
-                    <input type="email" name="email" class="form-control"
-                        value="<?= htmlspecialchars($_POST['email']) ?>" required>
+                    <input type="email" name="email"
+                           class="form-control form-control-lg"
+                           value="<?= htmlspecialchars($_POST['email']) ?>" required>
                 </div>
 
                 <div class="col-md-2">
@@ -108,10 +118,12 @@ $result = $conn->query("SELECT id, nome, email FROM utenti ORDER BY id ASC");
     <?php endif; ?>
 
     <!-- Tabella utenti -->
-    <div class="card p-4 shadow">
-        <table class="table table-bordered text-center">
+    <div class="card p-4">
+        <table class="table table-bordered table-bordered-black text-center">
             <thead class="table-dark">
-                <tr><th>ID</th><th>Nome</th><th>Email</th><th>Azione</th></tr>
+                <tr>
+                    <th>ID</th><th>Nome</th><th>Email</th><th>Azione</th>
+                </tr>
             </thead>
             <tbody>
                 <?php if ($result && $result->num_rows > 0) : ?>
@@ -121,23 +133,21 @@ $result = $conn->query("SELECT id, nome, email FROM utenti ORDER BY id ASC");
                             <td><?= $r['nome'] ?></td>
                             <td><?= $r['email'] ?></td>
                             <td>
-
-                                <!-- Pulsante Modifica -->
+                                <!-- Modifica -->
                                 <form method="POST" style="display:inline;">
                                     <input type="hidden" name="azione" value="mostra_modifica">
                                     <input type="hidden" name="id" value="<?= $r['id'] ?>">
                                     <input type="hidden" name="nome" value="<?= htmlspecialchars($r['nome']) ?>">
                                     <input type="hidden" name="email" value="<?= htmlspecialchars($r['email']) ?>">
-                                    <button class="btn btn-warning btn-sm">Modifica</button>
+                                    <button class="btn btn-modifica btn-sm">Modifica</button>
                                 </form>
 
-                                <!-- Pulsante Elimina -->
+                                <!-- Elimina -->
                                 <form method="POST" style="display:inline;">
                                     <input type="hidden" name="azione" value="elimina">
                                     <input type="hidden" name="id" value="<?= $r['id'] ?>">
-                                    <button class="btn btn-danger btn-sm">Elimina</button>
+                                    <button class="btn btn-elimina btn-sm">Elimina</button>
                                 </form>
-
                             </td>
                         </tr>
                     <?php endwhile; ?>
@@ -147,6 +157,7 @@ $result = $conn->query("SELECT id, nome, email FROM utenti ORDER BY id ASC");
             </tbody>
         </table>
     </div>
+
 </div>
 
 </body>
