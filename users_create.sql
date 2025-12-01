@@ -1,5 +1,6 @@
 CREATE TABLE utenti (
     id INT(11) NOT NULL AUTO_INCREMENT,
+    SELECT MAX(id) FROM utenti;
     nome VARCHAR(50) NOT NULL,
     email VARCHAR(100) NOT NULL,
     PRIMARY KEY (id)
